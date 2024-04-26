@@ -82,6 +82,7 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 	{
 		for(unsigned int j=0;j<board.size();j++)
 		{
+      //right,left, and diagnal right down 
 			boggleHelper(dict, prefix, board, "", result, i, j, 0, 1);
 			boggleHelper(dict, prefix, board, "", result, i, j, 1, 0);
 			boggleHelper(dict, prefix, board, "", result, i, j, 1, 1);
@@ -94,6 +95,56 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
 								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
 {
-//add your solution here!
+// Base case: check bounds
+    // Base case: check bounds
+    if (r >= board.size() || c >= board.size() || prefix.find(word) == prefix.end()) {
+      // do we want to add word
+      if (dict.find(word) != dict.end()) {
+        result.insert(word);
+        return true;
+      }
+      return false;
+    }
 
+    // (word, nextWord)
+
+    // Add the current character to the word
+    // right now we have word
+    // next we will have word + board[r][c]
+    std::string nextWord = word + board[r][c];
+    bool added = boggleHelper(dict, prefix, board, nextWord, result, r + dr, c + dc, dr, dc);
+
+    // if we added some nextWord later on, we don't need to add 'word' or anything before in recursion
+    if (added == true) {
+      return true;
+    }
+
+    // do we want to add word
+    if (dict.find(word) != dict.end()) {
+      result.insert(word);
+      return true;
+    }
+    return false;
+
+    // // Check if the current sequence of characters can still form a valid word or prefix
+    // if (prefix.find(word) == prefix.end()) {
+    //     return false;
+    // }
+
+    
+		// static std::string longestWord;
+		// if (dict.find(word) != dict.end() && word.length() > longestWord.length()) {
+    //     longestWord = word;
+    // }
+
+    // // Recursive call in the same direction to continue building the word
+    // if (!boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc)) {
+    //     // If recursion returns false, check if longestWord should be added to results
+    //     if (!longestWord.empty()) {
+    //         result.insert(longestWord);
+    //         longestWord.clear(); // Clear longest word for the next new start
+    //     }
+    // }
+
+    // return true; // Always return true if bounds and prefixes are valid
 }
